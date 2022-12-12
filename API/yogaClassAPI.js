@@ -9,6 +9,9 @@ const yogaClassAPI = () => {
     router.post("/addSlot", yogaClassController.addSlot);
     router.post("/changeSlotNextMonth", yogaClassController.changeSlotNextMonth);
     router.post("/payment", yogaClassController.addSlot);
+    router.post("/endMonthCall", yogaClassController.endOfMonthAPI); // this api is for internal for admin which is called on last day of month 
+                                                                // for shifting people in next batch
+
     return router;
 }
 

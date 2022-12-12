@@ -74,6 +74,11 @@ const yogaClassController = () => {
             r = await yogaClassService.changeSlotNextMonthUtil(req)
             return res.status(r.status).json({"message" : r.message});
         },
+
+        endOfMonthAPI : async (req,res) => {
+            r = await yogaClassService.endOfMonthAPIUtil(req)
+
+        }
     }
 }
 module.exports = yogaClassController;

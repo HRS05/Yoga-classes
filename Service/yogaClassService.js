@@ -123,6 +123,19 @@ const yogaClassService = () => {
 
         },
 
+        endOfMonthAPIUtil : async (req) => {
+            let doc = db.userbatchmodels.updateMany(
+                // Match all documents
+                {},
+                // MongoDB 4.2+ can use an aggregation pipeline for updates
+                [{
+                    $set: {
+                        "batch": "$newMonthBatch"
+                    }
+                }]
+            )
+        }
+
     };
 }
 
