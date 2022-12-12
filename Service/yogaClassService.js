@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const UserBatchModel = require("../Models/UserBatchModel");
+const PaymentModel = require("../Models/PaymentModel");
 require('dotenv').config();
 
 
@@ -79,10 +80,10 @@ const yogaClassService = () => {
             let aadharNumber = req?.body?.aadharNumber?.trim();
             let slot = req?.body?.batch?.trim();
             const user = await UserDetailsModel.findOne({ aadharNumber });
-            const checkUser = await UserBatchModel.findOne({aadharNumber});
             if (!(user)){
-                return {status : 400, message : {result : "Invalid User "+aadharNumber}};
+                return {status : 400, message : {result : "Invalid User, user is not registred "+aadharNumber}};
             }
+            const checkUser = await UserBatchModel.findOne({aadharNumber});
             if(checkUser){
                 return {status : 400, message : {result : "User is already in slot "+aadharNumber}};
             }
@@ -107,7 +108,7 @@ const yogaClassService = () => {
             const user = await UserDetailsModel.findOne({ aadharNumber });
             const checkUser = await UserBatchModel.findOne({aadharNumber});
             if (!(user)){
-                return {status : 400, message : {result : "Invalid User "+aadharNumber}};
+                return {status : 400, message : {result : "Invalid User, user is not registred"+aadharNumber}};
             }
             if(!checkUser){
                 return {status : 400, message : {result : "User is not exists for changing slot "+aadharNumber}};
@@ -130,10 +131,45 @@ const yogaClassService = () => {
                 // MongoDB 4.2+ can use an aggregation pipeline for updates
                 [{
                     $set: {
-                        "batch": "$newMonthBatch"
+                        "batch": "$newMonthBatch",
+                        "paymentStatus" : "pending"
                     }
                 }]
             )
+            return {status : 200, message : {result : "End mmonth API run Success"}};
+
+        },
+
+        completePaymentUtil : async (req) => {
+            let aadharNumber = req?.body?.aadharNumber?.trim();
+            const user = await UserDetailsModel.findOne({ aadharNumber });
+            if (!(user)){
+                return {status : 400, message : {result : "Invalid User, user not exists in UserDetailsModel "+aadharNumber}};
+            }
+            if(user.paymentStatus == "Success"){
+                return {status : 400, message : {result : "Payment is already done for user : "+aadharNumber}};
+            }
+            const checkUser = await UserBatchModel.findOne({aadharNumber});
+            if(!checkUser){
+                return {status : 400, message : {result : "User is have not selected Btach "+aadharNumber}};
+            }
+            let p = new PaymentModel();
+            p.aadharNumber = aadharNumber;
+            p.paymentId = aadharNumber+"ID";
+            try{
+                u = await p.save();
+            }catch(e)
+            {
+                return {status : 400, message : {result : "error in adding payment -->  "+ e }}
+            }
+            try{
+            let doc = await UserBatchModel.findOneAndUpdate({aadharNumber : aadharNumber}, {paymentStatus : "Success"},{new : true});
+            console.log(doc);
+            }catch(e){
+                return {status : 400, message : {result : "adding user error -->  "+ e }}
+            }   
+            return {status : 200, message : {result : "Payment Successful"}};
+
         }
 
     };

@@ -77,8 +77,19 @@ const yogaClassController = () => {
 
         endOfMonthAPI : async (req,res) => {
             r = await yogaClassService.endOfMonthAPIUtil(req)
+            return res.status(r.status).json({"message" : r.message});
+        },
+
+        completePayment : async (req,res) => {
+            let aadharNumber = req?.body?.aadharNumber?.trim();
+            if(!aadharNumber || aadharNumber?.length != 12) return res.status(400).json({"message" : "size of aadhar number should be 12"});
+            r = await yogaClassService.completePaymentUtil(req);
+            return res.status(r.status).json({"message" : r.message});
 
         }
+
+
+
     }
 }
 module.exports = yogaClassController;

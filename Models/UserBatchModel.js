@@ -13,3 +13,4 @@ var userBatchSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("UserBatchModel", userBatchSchema);
+
