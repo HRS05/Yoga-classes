@@ -133,5 +133,5 @@ we have used 3-tables which are UserDetailsModel, UserBatchModel and PaymentMode
 ```
 ### ER - Diagram
 
-<img src='images/erDiagram.png' width=500>  
+<img src='images/erDiagram.jpeg' width=500>  
 
