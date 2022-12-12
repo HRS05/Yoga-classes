@@ -125,7 +125,8 @@ const yogaClassService = () => {
         },
 
         endOfMonthAPIUtil : async (req) => {
-            let doc = db.userbatchmodels.updateMany(
+            console.log("got called");
+            let doc =await UserBatchModel.updateMany(
                 // Match all documents
                 {},
                 // MongoDB 4.2+ can use an aggregation pipeline for updates
