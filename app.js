@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const YogaClassAPI = require("./API/yogaClassAPI")();
 require('dotenv').config();
 
-const xx = require("./DBconnection/db");
+const xx = require("./DBConnection/db");
 const { API_PORT } = process.env;
 
 console.log("API_port ---> "+process.env.API_PORT);
